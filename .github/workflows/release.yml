@@ -1,0 +1,53 @@
+name: release
+on:
+  push:
+    branches:
+      - main
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      CI: "true"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14.x'
+      - name: Install
+        run: yarn install
+      - name: Build
+        run: yarn build
+      - name: Create release
+        run: yarn release
+      - name: Set git identity
+        run: |-
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+      - name: Push release
+        run: git push --follow-tags
+      - uses: actions/upload-artifact@v3
+        with:
+          name: build-artifact
+          path: |
+            *
+            !node_modules
+  release_npm:
+    needs: release
+    runs-on: ubuntu-latest
+    env:
+      CI: "true"
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: build-artifact
+      - run: ls -la
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: yarn publish
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
