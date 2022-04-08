@@ -20,7 +20,7 @@ import { ServerlessApplicationRepositoryPolicyCollector } from './serverless';
 import { SnsPolicyCollector } from './sns';
 import { SqsPolicyCollector } from './sqs';
 
-const main = async () => {
+export const collect = async () => {
   const collectors = [
     new ApiGatewayPolicyCollector(),
     new BackupPolicyCollector(),
@@ -44,12 +44,5 @@ const main = async () => {
     new SnsPolicyCollector(),
     new SqsPolicyCollector(),
   ];
-
-  const results = await Promise.all(
-    collectors.map((collector) => collector.run()),
-  );
-
-  console.log(results);
+  return await Promise.all(collectors.map((collector) => collector.run()));
 };
-
-main();
