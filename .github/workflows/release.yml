@@ -9,7 +9,7 @@ jobs:
     permissions:
       contents: write
     env:
-      CI: "true"
+      CI: 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -20,12 +20,12 @@ jobs:
         run: yarn install
       - name: Build
         run: yarn build
-      - name: Create release
-        run: yarn release
       - name: Set git identity
         run: |-
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+      - name: Create release
+        run: yarn release
       - name: Push release
         run: git push --follow-tags
       - uses: actions/upload-artifact@v3
@@ -38,7 +38,7 @@ jobs:
     needs: release
     runs-on: ubuntu-latest
     env:
-      CI: "true"
+      CI: 'true'
     steps:
       - uses: actions/download-artifact@v3
         with:
