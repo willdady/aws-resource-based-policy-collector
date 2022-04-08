@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.0.4 (2022-04-08)
+
+
+### Bug Fixes
+
+* use region-specific client when fetching bucket policies ([f36466d](https://github.com/willdady/aws-resource-based-policy-collector/commit/f36466d8b10f1d6d67614e9b55cf5610aab99f4b))
+
 ### 1.0.3 (2022-04-08)
 
 
