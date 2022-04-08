@@ -2,6 +2,7 @@ import {
   S3Client,
   ListBucketsCommand,
   GetBucketPolicyCommand,
+  GetBucketLocationCommand,
 } from '@aws-sdk/client-s3';
 import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 
@@ -17,8 +18,18 @@ export class S3PolicyCollector extends BasePolicyCollector {
     return this.client.send(new ListBucketsCommand({}));
   }
 
-  private async getBucketPolicy(bucketName: string) {
+  private async getBucketLocation(bucketName: string) {
     return this.client.send(
+      new GetBucketLocationCommand({
+        Bucket: bucketName,
+      }),
+    );
+  }
+
+  private async getBucketPolicy(bucketName: string, region: string) {
+    // Region-specific client
+    const client = new S3Client({ region });
+    return client.send(
       new GetBucketPolicyCommand({
         Bucket: bucketName,
       }),
@@ -32,18 +43,22 @@ export class S3PolicyCollector extends BasePolicyCollector {
     };
     const buckets = await this.listBuckets();
     for (const b of buckets.Buckets || []) {
-      let response;
+      const bucketLocationResponse = await this.getBucketLocation(b.Name!);
+      let getBucketPolicyResponse;
       try {
-        response = await this.getBucketPolicy(b.Name!);
+        getBucketPolicyResponse = await this.getBucketPolicy(
+          b.Name!,
+          bucketLocationResponse.LocationConstraint || 'us-east-1',
+        );
       } catch (err) {
         if ((err as Error).name === 'NoSuchBucketPolicy') continue;
         throw err;
       }
-      if (!response.Policy) continue;
+      if (!getBucketPolicyResponse.Policy) continue;
       result.resources.push({
         type: 'AWS::S3::Bucket',
         id: b.Name!,
-        policy: response.Policy,
+        policy: getBucketPolicyResponse.Policy,
       });
     }
     return result;
