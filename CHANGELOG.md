@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.0.5 (2022-04-11)
+
+
+### Bug Fixes
+
+* handling ResourceNotFoundException when getting AWS Backup vault access policy ([c2737f4](https://github.com/willdady/aws-resource-based-policy-collector/commit/c2737f4ea0f293da53f5b959c2beb1a81f910d96))
+
 ### 1.0.4 (2022-04-08)
 
 
