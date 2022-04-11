@@ -1,13 +1,13 @@
 {
-    "compilerOptions": {
-      "module": "commonjs",
-      "esModuleInterop": true,
-      "target": "es6",
-      "moduleResolution": "node",
-      "sourceMap": true,
-      "outDir": "dist",
-      "declaration": true,
-      "strict": true
-    },
-    "lib": ["es2018", "esnext.asynciterable"]
-  }
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es6",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist",
+    "declaration": true,
+    "strict": true
+  },
+  "lib": ["es2018", "esnext.asynciterable"]
+}

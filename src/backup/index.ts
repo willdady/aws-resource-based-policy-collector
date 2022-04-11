@@ -3,6 +3,7 @@ import {
   BackupVaultListMember,
   GetBackupVaultAccessPolicyCommand,
   paginateListBackupVaults,
+  ResourceNotFoundException,
 } from '@aws-sdk/client-backup';
 import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 
@@ -36,7 +37,15 @@ export class BackupPolicyCollector extends BasePolicyCollector {
     };
     const vaults = await this.listBackupVaults();
     for (const v of vaults) {
-      const response = await this.getVaultAccessPolicy(v.BackupVaultName!);
+      let response;
+      try {
+        response = await this.getVaultAccessPolicy(v.BackupVaultName!);
+      } catch (err) {
+        if (err instanceof ResourceNotFoundException) {
+          continue;
+        }
+        throw err;
+      }
       if (!response.Policy) continue;
       result.resources.push({
         type: 'AWS::Backup::BackupVault',
