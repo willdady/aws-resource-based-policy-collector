@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.0.7 (2022-04-11)
+
+
+### Bug Fixes
+
+* handle not-found policies for EventBridge schema registries ([7120a65](https://github.com/willdady/aws-resource-based-policy-collector/commit/7120a6529230bdea9c3f9fc052ace1486ff72ca1))
+
 ### 1.0.6 (2022-04-11)
 
 ### 1.0.5 (2022-04-11)
