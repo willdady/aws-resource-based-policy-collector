@@ -1,5 +1,6 @@
 import {
   GetResourcePolicyCommand,
+  NotFoundException,
   paginateListRegistries,
   RegistrySummary,
   SchemasClient,
@@ -38,7 +39,15 @@ export class EventBridgeSchemasPolicyCollector extends BasePolicyCollector {
     for (const r of registries) {
       // NOTE: Can not read policies of AWS managed registries
       if (r.RegistryName!.startsWith('aws.')) continue;
-      const response = await this.getResourcePolicy(r.RegistryName!);
+      let response;
+      try {
+        response = await this.getResourcePolicy(r.RegistryName!);
+      } catch (err) {
+        if (err instanceof NotFoundException) {
+          continue;
+        }
+        throw err;
+      }
       if (!response.Policy) continue;
       result.resources.push({
         type: 'AWS::EventSchemas::Registry',
