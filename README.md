@@ -7,12 +7,16 @@ This library aims to collect resource-based policies from an AWS account.
 ## Install
 
 ```bash
-yarn install aws-resource-based-policy-collector
+yarn add aws-resource-based-policy-collector
+```
+or
+```bash
+npm install aws-resource-based-policy-collector
 ```
 
 ## Usage
 
-Your environment must be configured with valid AWS credentials. See [Setting credentials in Node.js][credentials]. You credentials must be authorised to perform read-only actions within your account.
+Your environment must be configured with valid AWS credentials. See [Setting credentials in Node.js][credentials]. Your credentials must be authorised to perform read-only actions within your account.
 
 ```typescript
 
