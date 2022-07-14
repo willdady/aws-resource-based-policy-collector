@@ -38,8 +38,8 @@ export class IamPolicyCollector extends BasePolicyCollector {
       if (!response.Role?.AssumeRolePolicyDocument) continue;
       result.resources.push({
         type: 'AWS::IAM::Role',
-        id: r.RoleId!,
-        policy: response.Role.AssumeRolePolicyDocument,
+        id: r.RoleName!,
+        policy: decodeURIComponent(response.Role.AssumeRolePolicyDocument),
       });
     }
     return result;
