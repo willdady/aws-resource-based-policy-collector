@@ -5,7 +5,7 @@
     "type": "git",
     "url": "https://github.com/willdady/aws-resource-based-policy-collector.git"
   },
-  "version": "1.0.9",
+  "version": "1.0.10",
   "main": "dist/index.js",
   "license": "MIT",
   "author": {
