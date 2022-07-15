@@ -20,7 +20,7 @@ import { ServerlessApplicationRepositoryPolicyCollector } from './serverless';
 import { SnsPolicyCollector } from './sns';
 import { SqsPolicyCollector } from './sqs';
 
-export { ServicePoliciesResult } from './core';
+export { ServicePoliciesResult, ServiceResource } from './core';
 
 export const collect = async () => {
   const collectors = [
