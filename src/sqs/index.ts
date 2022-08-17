@@ -2,15 +2,16 @@ import {
   SQSClient,
   GetQueueAttributesCommand,
   paginateListQueues,
+  SQSClientConfig,
 } from '@aws-sdk/client-sqs';
 import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 
 export class SqsPolicyCollector extends BasePolicyCollector {
   private client: SQSClient;
 
-  constructor() {
+  constructor(clientConfig?: SQSClientConfig) {
     super({ serviceName: 'sqs' });
-    this.client = new SQSClient({});
+    this.client = new SQSClient(clientConfig || {});
   }
 
   private async listQueues(): Promise<string[]> {

@@ -1,6 +1,7 @@
 import {
   GetRoleCommand,
   IAMClient,
+  IAMClientConfig,
   paginateListRoles,
   Role,
 } from '@aws-sdk/client-iam';
@@ -9,9 +10,9 @@ import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 export class IamPolicyCollector extends BasePolicyCollector {
   private client: IAMClient;
 
-  constructor() {
+  constructor(clientConfig?: IAMClientConfig) {
     super({ serviceName: 'iam' });
-    this.client = new IAMClient({});
+    this.client = new IAMClient(clientConfig || {});
   }
 
   private async listRoles(): Promise<Role[]> {

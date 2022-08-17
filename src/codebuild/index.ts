@@ -1,5 +1,6 @@
 import {
   CodeBuildClient,
+  CodeBuildClientConfig,
   GetResourcePolicyCommand,
   paginateListSharedProjects,
 } from '@aws-sdk/client-codebuild';
@@ -8,7 +9,7 @@ import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 export class CodeBuildPolicyCollector extends BasePolicyCollector {
   private client: CodeBuildClient;
 
-  constructor() {
+  constructor(clientConfig?: CodeBuildClientConfig) {
     super({ serviceName: 'codebuild' });
     this.client = new CodeBuildClient({});
   }

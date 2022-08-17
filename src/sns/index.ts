@@ -2,6 +2,7 @@ import {
   GetTopicAttributesCommand,
   paginateListTopics,
   SNSClient,
+  SNSClientConfig,
   Topic,
 } from '@aws-sdk/client-sns';
 import { BasePolicyCollector, ServicePoliciesResult } from '../core';
@@ -9,9 +10,9 @@ import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 export class SnsPolicyCollector extends BasePolicyCollector {
   private client: SNSClient;
 
-  constructor() {
+  constructor(clientConfig?: SNSClientConfig) {
     super({ serviceName: 'sns' });
-    this.client = new SNSClient({});
+    this.client = new SNSClient(clientConfig || {});
   }
 
   private async listTopics(): Promise<Topic[]> {

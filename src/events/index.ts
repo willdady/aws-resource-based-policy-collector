@@ -2,15 +2,16 @@ import {
   EventBridgeClient,
   ListEventBusesCommand,
   EventBus,
+  EventBridgeClientConfig,
 } from '@aws-sdk/client-eventbridge';
 import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 
 export class EventBridgePolicyCollector extends BasePolicyCollector {
   private client: EventBridgeClient;
 
-  constructor() {
+  constructor(clientConfig?: EventBridgeClientConfig) {
     super({ serviceName: 'events' });
-    this.client = new EventBridgeClient({});
+    this.client = new EventBridgeClient(clientConfig || {});
   }
 
   private async listEventBuses(): Promise<EventBus[]> {

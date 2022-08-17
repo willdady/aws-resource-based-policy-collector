@@ -1,6 +1,7 @@
 import {
   GetContainerPolicyCommand,
   MediaStoreClient,
+  MediaStoreClientConfig,
   paginateListContainers,
   PolicyNotFoundException,
 } from '@aws-sdk/client-mediastore';
@@ -9,9 +10,9 @@ import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 export class MediaStorePolicyCollector extends BasePolicyCollector {
   private client: MediaStoreClient;
 
-  constructor() {
+  constructor(clientConfig?: MediaStoreClientConfig) {
     super({ serviceName: 'mediastore' });
-    this.client = new MediaStoreClient({});
+    this.client = new MediaStoreClient(clientConfig || {});
   }
 
   private async listContainers() {

@@ -2,15 +2,16 @@ import {
   DescribeDomainCommand,
   ListDomainNamesCommand,
   OpenSearchClient,
+  OpenSearchClientConfig,
 } from '@aws-sdk/client-opensearch';
 import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 
 export class OpenSearchClientPolicyCollector extends BasePolicyCollector {
   private client: OpenSearchClient;
 
-  constructor() {
+  constructor(clientConfig?: OpenSearchClientConfig) {
     super({ serviceName: 'opensearch' });
-    this.client = new OpenSearchClient({});
+    this.client = new OpenSearchClient(clientConfig || {});
   }
 
   private async listDomainNames() {

@@ -3,15 +3,16 @@ import {
   GetResourcePolicyCommand,
   SecretListEntry,
   paginateListSecrets,
+  SecretsManagerClientConfig,
 } from '@aws-sdk/client-secrets-manager';
 import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 
 export class SecretsManagerPolicyCollector extends BasePolicyCollector {
   private client: SecretsManagerClient;
 
-  constructor() {
+  constructor(clientConfig?: SecretsManagerClientConfig) {
     super({ serviceName: 'secretsmanager' });
-    this.client = new SecretsManagerClient({});
+    this.client = new SecretsManagerClient(clientConfig || {});
   }
 
   private async listSecrets(): Promise<SecretListEntry[]> {

@@ -2,6 +2,7 @@ import {
   GetKeyPolicyCommand,
   KeyListEntry,
   KMSClient,
+  KMSClientConfig,
   paginateListKeys,
 } from '@aws-sdk/client-kms';
 import { BasePolicyCollector, ServicePoliciesResult } from '../core';
@@ -9,9 +10,9 @@ import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 export class KmsPolicyCollector extends BasePolicyCollector {
   private client: KMSClient;
 
-  constructor() {
+  constructor(clientConfig?: KMSClientConfig) {
     super({ serviceName: 'kms' });
-    this.client = new KMSClient({});
+    this.client = new KMSClient(clientConfig || {});
   }
 
   private async listKeys(): Promise<KeyListEntry[]> {

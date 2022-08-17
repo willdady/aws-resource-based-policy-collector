@@ -1,6 +1,7 @@
 import {
   DescribeFileSystemPolicyCommand,
   EFSClient,
+  EFSClientConfig,
   FileSystemDescription,
   paginateDescribeFileSystems,
 } from '@aws-sdk/client-efs';
@@ -9,9 +10,9 @@ import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 export class EfsPolicyCollector extends BasePolicyCollector {
   private client: EFSClient;
 
-  constructor() {
+  constructor(clientConfig?: EFSClientConfig) {
     super({ serviceName: 'efs' });
-    this.client = new EFSClient({});
+    this.client = new EFSClient(clientConfig || {});
   }
 
   private async describeFileSystems(): Promise<FileSystemDescription[]> {

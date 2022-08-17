@@ -1,5 +1,6 @@
 import {
   BackupClient,
+  BackupClientConfig,
   BackupVaultListMember,
   GetBackupVaultAccessPolicyCommand,
   paginateListBackupVaults,
@@ -10,9 +11,9 @@ import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 export class BackupPolicyCollector extends BasePolicyCollector {
   private client: BackupClient;
 
-  constructor() {
+  constructor(clientConfig?: BackupClientConfig) {
     super({ serviceName: 'backup' });
-    this.client = new BackupClient({});
+    this.client = new BackupClient(clientConfig || {});
   }
 
   private async listBackupVaults(): Promise<BackupVaultListMember[]> {

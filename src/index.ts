@@ -22,29 +22,29 @@ import { SqsPolicyCollector } from './sqs';
 
 export { ServicePoliciesResult, ServiceResource } from './core';
 
-export const collect = async () => {
+export const collect = async (config?: { region?: string }) => {
   const collectors = [
-    new ApiGatewayPolicyCollector(),
-    new BackupPolicyCollector(),
-    new CloudWatchLogsPolicyCollector(),
-    new CodeArtifactPolicyCollector(),
-    new CodeBuildPolicyCollector(),
-    new Ec2PolicyCollector(),
-    new EcrPolicyCollector(),
-    new EfsPolicyCollector(),
-    new EventBridgePolicyCollector(),
-    new EventBridgeSchemasPolicyCollector(),
-    new GlacierPolicyCollector(),
-    new IamPolicyCollector(),
-    new KmsPolicyCollector(),
-    new LambdaPolicyCollector(),
-    new MediaStorePolicyCollector(),
-    new OpenSearchClientPolicyCollector(),
-    new S3PolicyCollector(),
-    new SecretsManagerPolicyCollector(),
-    new ServerlessApplicationRepositoryPolicyCollector(),
-    new SnsPolicyCollector(),
-    new SqsPolicyCollector(),
+    new ApiGatewayPolicyCollector(config),
+    new BackupPolicyCollector(config),
+    new CloudWatchLogsPolicyCollector(config),
+    new CodeArtifactPolicyCollector(config),
+    new CodeBuildPolicyCollector(config),
+    new Ec2PolicyCollector(config),
+    new EcrPolicyCollector(config),
+    new EfsPolicyCollector(config),
+    new EventBridgePolicyCollector(config),
+    new EventBridgeSchemasPolicyCollector(config),
+    new GlacierPolicyCollector(config),
+    new IamPolicyCollector(config),
+    new KmsPolicyCollector(config),
+    new LambdaPolicyCollector(config),
+    new MediaStorePolicyCollector(config),
+    new OpenSearchClientPolicyCollector(config),
+    new S3PolicyCollector(config),
+    new SecretsManagerPolicyCollector(config),
+    new ServerlessApplicationRepositoryPolicyCollector(config),
+    new SnsPolicyCollector(config),
+    new SqsPolicyCollector(config),
   ];
   return await Promise.all(collectors.map((collector) => collector.run()));
 };

@@ -1,5 +1,6 @@
 import {
   CloudWatchLogsClient,
+  CloudWatchLogsClientConfig,
   paginateDescribeDestinations,
 } from '@aws-sdk/client-cloudwatch-logs';
 import { BasePolicyCollector, ServicePoliciesResult } from '../core';
@@ -7,9 +8,9 @@ import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 export class CloudWatchLogsPolicyCollector extends BasePolicyCollector {
   private client: CloudWatchLogsClient;
 
-  constructor() {
+  constructor(clientConfig?: CloudWatchLogsClientConfig) {
     super({ serviceName: 'logs' });
-    this.client = new CloudWatchLogsClient({});
+    this.client = new CloudWatchLogsClient(clientConfig || {});
   }
 
   private async describeDestinations() {

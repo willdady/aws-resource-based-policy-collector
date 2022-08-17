@@ -1,5 +1,6 @@
 import {
   CodeartifactClient,
+  CodeartifactClientConfig,
   DomainSummary,
   GetDomainPermissionsPolicyCommand,
   paginateListDomains,
@@ -9,9 +10,9 @@ import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 export class CodeArtifactPolicyCollector extends BasePolicyCollector {
   private client: CodeartifactClient;
 
-  constructor() {
+  constructor(clientConfig?: CodeartifactClientConfig) {
     super({ serviceName: 'codeartifact' });
-    this.client = new CodeartifactClient({});
+    this.client = new CodeartifactClient(clientConfig || {});
   }
 
   private async listDomains(): Promise<DomainSummary[]> {

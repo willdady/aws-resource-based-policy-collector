@@ -2,6 +2,7 @@ import {
   DescribeVaultOutput,
   GetVaultAccessPolicyCommand,
   GlacierClient,
+  GlacierClientConfig,
   paginateListVaults,
 } from '@aws-sdk/client-glacier';
 import { BasePolicyCollector, ServicePoliciesResult } from '../core';
@@ -9,9 +10,9 @@ import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 export class GlacierPolicyCollector extends BasePolicyCollector {
   private client: GlacierClient;
 
-  constructor() {
+  constructor(clientConfig?: GlacierClientConfig) {
     super({ serviceName: 'glacier' });
-    this.client = new GlacierClient({});
+    this.client = new GlacierClient(clientConfig || {});
   }
 
   private async listVaults(): Promise<DescribeVaultOutput[]> {

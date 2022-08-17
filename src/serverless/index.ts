@@ -3,15 +3,16 @@ import {
   GetApplicationPolicyCommand,
   paginateListApplications,
   ServerlessApplicationRepositoryClient,
+  ServerlessApplicationRepositoryClientConfig,
 } from '@aws-sdk/client-serverlessapplicationrepository';
 import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 
 export class ServerlessApplicationRepositoryPolicyCollector extends BasePolicyCollector {
   private client: ServerlessApplicationRepositoryClient;
 
-  constructor() {
+  constructor(clientConfig?: ServerlessApplicationRepositoryClientConfig) {
     super({ serviceName: 'serverless' });
-    this.client = new ServerlessApplicationRepositoryClient({});
+    this.client = new ServerlessApplicationRepositoryClient(clientConfig || {});
   }
 
   private async listApplications(): Promise<ApplicationSummary[]> {

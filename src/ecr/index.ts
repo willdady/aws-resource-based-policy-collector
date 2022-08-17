@@ -1,5 +1,6 @@
 import {
   ECRClient,
+  ECRClientConfig,
   GetRepositoryPolicyCommand,
   paginateDescribeRepositories,
   Repository,
@@ -10,9 +11,9 @@ import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 export class EcrPolicyCollector extends BasePolicyCollector {
   private client: ECRClient;
 
-  constructor() {
+  constructor(clientConfig?: ECRClientConfig) {
     super({ serviceName: 'ecr' });
-    this.client = new ECRClient({});
+    this.client = new ECRClient(clientConfig || {});
   }
 
   private async describeRepositories(): Promise<Repository[]> {

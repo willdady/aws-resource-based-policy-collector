@@ -5,15 +5,16 @@ import {
   paginateListFunctions,
   paginateListAliases,
   paginateListVersionsByFunction,
+  LambdaClientConfig,
 } from '@aws-sdk/client-lambda';
 import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 
 export class LambdaPolicyCollector extends BasePolicyCollector {
   private client: LambdaClient;
 
-  constructor() {
+  constructor(clientConfig?: LambdaClientConfig) {
     super({ serviceName: 'lambda' });
-    this.client = new LambdaClient({});
+    this.client = new LambdaClient(clientConfig || {});
   }
 
   private async listFunctions() {

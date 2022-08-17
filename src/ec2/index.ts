@@ -1,5 +1,6 @@
 import {
   EC2Client,
+  EC2ClientConfig,
   paginateDescribeVpcEndpoints,
   VpcEndpoint,
 } from '@aws-sdk/client-ec2';
@@ -8,9 +9,9 @@ import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 export class Ec2PolicyCollector extends BasePolicyCollector {
   private client: EC2Client;
 
-  constructor() {
+  constructor(clientConfig?: EC2ClientConfig) {
     super({ serviceName: 'ec2' });
-    this.client = new EC2Client({});
+    this.client = new EC2Client(clientConfig || {});
   }
 
   private async describeVpcEndpoints(): Promise<VpcEndpoint[]> {

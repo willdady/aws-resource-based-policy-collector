@@ -3,15 +3,16 @@ import {
   ListBucketsCommand,
   GetBucketPolicyCommand,
   GetBucketLocationCommand,
+  S3ClientConfig,
 } from '@aws-sdk/client-s3';
 import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 
 export class S3PolicyCollector extends BasePolicyCollector {
   private client: S3Client;
 
-  constructor() {
+  constructor(clientConfig?: S3ClientConfig) {
     super({ serviceName: 's3' });
-    this.client = new S3Client({});
+    this.client = new S3Client(clientConfig || {});
   }
 
   private async listBuckets() {

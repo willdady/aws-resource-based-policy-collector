@@ -1,5 +1,6 @@
 import {
   APIGatewayClient,
+  APIGatewayClientConfig,
   paginateGetRestApis,
   RestApi,
 } from '@aws-sdk/client-api-gateway';
@@ -8,9 +9,9 @@ import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 export class ApiGatewayPolicyCollector extends BasePolicyCollector {
   private client: APIGatewayClient;
 
-  constructor() {
+  constructor(clientConfig?: APIGatewayClientConfig) {
     super({ serviceName: 'apigateway' });
-    this.client = new APIGatewayClient({});
+    this.client = new APIGatewayClient(clientConfig || {});
   }
 
   private async getRestApis(): Promise<RestApi[]> {

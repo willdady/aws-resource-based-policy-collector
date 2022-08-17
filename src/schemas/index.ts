@@ -4,15 +4,16 @@ import {
   paginateListRegistries,
   RegistrySummary,
   SchemasClient,
+  SchemasClientConfig,
 } from '@aws-sdk/client-schemas';
 import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 
 export class EventBridgeSchemasPolicyCollector extends BasePolicyCollector {
   private client: SchemasClient;
 
-  constructor() {
+  constructor(clientConfig?: SchemasClientConfig) {
     super({ serviceName: 'schemas' });
-    this.client = new SchemasClient({});
+    this.client = new SchemasClient(clientConfig || {});
   }
 
   private async listRegistries(): Promise<RegistrySummary[]> {
