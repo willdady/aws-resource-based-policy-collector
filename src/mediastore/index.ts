@@ -35,22 +35,26 @@ export class MediaStorePolicyCollector extends BasePolicyCollector {
       serviceName: this.serviceName,
       resources: [],
     };
-    const containers = await this.listContainers();
-    for (const c of containers) {
-      try {
-        const response = await this.getContainerPolicy(c.Name!);
-        if (!response.Policy) continue;
-        result.resources.push({
-          type: 'AWS::MediaStore::Container',
-          id: c.Name!,
-          policy: response.Policy,
-        });
-      } catch (err) {
-        if (err instanceof PolicyNotFoundException) {
-          continue;
+    try {
+      const containers = await this.listContainers();
+      for (const c of containers) {
+        try {
+          const response = await this.getContainerPolicy(c.Name!);
+          if (!response.Policy) continue;
+          result.resources.push({
+            type: 'AWS::MediaStore::Container',
+            id: c.Name!,
+            policy: response.Policy,
+          });
+        } catch (err) {
+          if (err instanceof PolicyNotFoundException) {
+            continue;
+          }
+          throw err;
         }
-        throw err;
       }
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }

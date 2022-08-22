@@ -38,15 +38,19 @@ export class GlacierPolicyCollector extends BasePolicyCollector {
       serviceName: this.serviceName,
       resources: [],
     };
-    const vaults = await this.listVaults();
-    for (const v of vaults) {
-      const response = await this.getVaultAccessPolicy(v.VaultName!);
-      if (!response.policy?.Policy) continue;
-      result.resources.push({
-        type: 'AWS::Glacier::Vault',
-        id: v.VaultName!,
-        policy: response.policy.Policy,
-      });
+    try {
+      const vaults = await this.listVaults();
+      for (const v of vaults) {
+        const response = await this.getVaultAccessPolicy(v.VaultName!);
+        if (!response.policy?.Policy) continue;
+        result.resources.push({
+          type: 'AWS::Glacier::Vault',
+          id: v.VaultName!,
+          policy: response.policy.Policy,
+        });
+      }
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }

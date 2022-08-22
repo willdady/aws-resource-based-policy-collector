@@ -50,6 +50,19 @@ Each resource contains a JSON encoded `policy`. Only resources with policies are
 ]
 ```
 
+If an error is encounted when processing a service the error object is emitted into the optional `error` field.
+
+```typescript
+[
+  {
+    serviceName: 's3',
+    resources: [],
+    error: '' // JSON encoded string
+  },
+  ...
+]
+```
+
 ## Supported services
 
 This library currently collects resource-based policies for AWS services listed below. 

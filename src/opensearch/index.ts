@@ -29,15 +29,19 @@ export class OpenSearchClientPolicyCollector extends BasePolicyCollector {
       serviceName: this.serviceName,
       resources: [],
     };
-    const domainNames = await this.listDomainNames();
-    for (const d of domainNames.DomainNames || []) {
-      const response = await this.describeDomain(d.DomainName!);
-      if (!response.DomainStatus?.AccessPolicies) continue;
-      result.resources.push({
-        type: 'AWS::OpenSearchService::Domain',
-        id: d.DomainName!,
-        policy: response.DomainStatus.AccessPolicies,
-      });
+    try {
+      const domainNames = await this.listDomainNames();
+      for (const d of domainNames.DomainNames || []) {
+        const response = await this.describeDomain(d.DomainName!);
+        if (!response.DomainStatus?.AccessPolicies) continue;
+        result.resources.push({
+          type: 'AWS::OpenSearchService::Domain',
+          id: d.DomainName!,
+          policy: response.DomainStatus.AccessPolicies,
+        });
+      }
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }

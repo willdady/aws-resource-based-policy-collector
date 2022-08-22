@@ -28,14 +28,18 @@ export class Ec2PolicyCollector extends BasePolicyCollector {
       serviceName: this.serviceName,
       resources: [],
     };
-    const vpcEndpoints = await this.describeVpcEndpoints();
-    for (const vpce of vpcEndpoints) {
-      if (!vpce.PolicyDocument) continue;
-      result.resources.push({
-        type: 'AWS::EC2::VPCEndpoint',
-        id: vpce.VpcEndpointId!,
-        policy: vpce.PolicyDocument,
-      });
+    try {
+      const vpcEndpoints = await this.describeVpcEndpoints();
+      for (const vpce of vpcEndpoints) {
+        if (!vpce.PolicyDocument) continue;
+        result.resources.push({
+          type: 'AWS::EC2::VPCEndpoint',
+          id: vpce.VpcEndpointId!,
+          policy: vpce.PolicyDocument,
+        });
+      }
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }

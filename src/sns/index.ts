@@ -37,15 +37,19 @@ export class SnsPolicyCollector extends BasePolicyCollector {
       serviceName: this.serviceName,
       resources: [],
     };
-    const topics = await this.listTopics();
-    for (const topic of topics) {
-      const response = await this.getTopicAttributes(topic.TopicArn!);
-      if (!response.Attributes?.Policy) continue;
-      result.resources.push({
-        type: 'AWS::SNS::Topic',
-        id: topic.TopicArn!,
-        policy: response.Attributes.Policy,
-      });
+    try {
+      const topics = await this.listTopics();
+      for (const topic of topics) {
+        const response = await this.getTopicAttributes(topic.TopicArn!);
+        if (!response.Attributes?.Policy) continue;
+        result.resources.push({
+          type: 'AWS::SNS::Topic',
+          id: topic.TopicArn!,
+          policy: response.Attributes.Policy,
+        });
+      }
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }

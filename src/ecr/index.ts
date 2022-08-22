@@ -38,22 +38,26 @@ export class EcrPolicyCollector extends BasePolicyCollector {
       serviceName: this.serviceName,
       resources: [],
     };
-    const repositories = await this.describeRepositories();
-    for (const r of repositories) {
-      try {
-        const response = await this.getRepositoryPolicy(r.repositoryName!);
-        if (!response.policyText) continue;
-        result.resources.push({
-          type: 'AWS::ECR::Repository',
-          id: r.repositoryName!,
-          policy: response.policyText,
-        });
-      } catch (err) {
-        if (err instanceof RepositoryPolicyNotFoundException) {
-          continue;
+    try {
+      const repositories = await this.describeRepositories();
+      for (const r of repositories) {
+        try {
+          const response = await this.getRepositoryPolicy(r.repositoryName!);
+          if (!response.policyText) continue;
+          result.resources.push({
+            type: 'AWS::ECR::Repository',
+            id: r.repositoryName!,
+            policy: response.policyText,
+          });
+        } catch (err) {
+          if (err instanceof RepositoryPolicyNotFoundException) {
+            continue;
+          }
+          throw err;
         }
-        throw err;
       }
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }

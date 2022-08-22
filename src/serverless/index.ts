@@ -37,15 +37,19 @@ export class ServerlessApplicationRepositoryPolicyCollector extends BasePolicyCo
       serviceName: this.serviceName,
       resources: [],
     };
-    const applications = await this.listApplications();
-    for (const a of applications) {
-      const response = await this.getApplicationPolicy(a.ApplicationId!);
-      if (!response.Statements) continue;
-      result.resources.push({
-        type: 'AWS::Serverless::Application',
-        id: a.ApplicationId!,
-        policy: JSON.stringify(response.Statements),
-      });
+    try {
+      const applications = await this.listApplications();
+      for (const a of applications) {
+        const response = await this.getApplicationPolicy(a.ApplicationId!);
+        if (!response.Statements) continue;
+        result.resources.push({
+          type: 'AWS::Serverless::Application',
+          id: a.ApplicationId!,
+          policy: JSON.stringify(response.Statements),
+        });
+      }
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }

@@ -36,23 +36,27 @@ export class BackupPolicyCollector extends BasePolicyCollector {
       serviceName: this.serviceName,
       resources: [],
     };
-    const vaults = await this.listBackupVaults();
-    for (const v of vaults) {
-      let response;
-      try {
-        response = await this.getVaultAccessPolicy(v.BackupVaultName!);
-      } catch (err) {
-        if (err instanceof ResourceNotFoundException) {
-          continue;
+    try {
+      const vaults = await this.listBackupVaults();
+      for (const v of vaults) {
+        let response;
+        try {
+          response = await this.getVaultAccessPolicy(v.BackupVaultName!);
+        } catch (err) {
+          if (err instanceof ResourceNotFoundException) {
+            continue;
+          }
+          throw err;
         }
-        throw err;
+        if (!response.Policy) continue;
+        result.resources.push({
+          type: 'AWS::Backup::BackupVault',
+          id: v.BackupVaultName!,
+          policy: response.Policy,
+        });
       }
-      if (!response.Policy) continue;
-      result.resources.push({
-        type: 'AWS::Backup::BackupVault',
-        id: v.BackupVaultName!,
-        policy: response.Policy,
-      });
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }

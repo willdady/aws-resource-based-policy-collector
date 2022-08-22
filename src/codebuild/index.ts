@@ -34,15 +34,19 @@ export class CodeBuildPolicyCollector extends BasePolicyCollector {
       serviceName: this.serviceName,
       resources: [],
     };
-    const projects = await this.listSharedProjects();
-    for (const arn of projects) {
-      const response = await this.getResourcePolicy(arn);
-      if (!response.policy) continue;
-      result.resources.push({
-        type: 'AWS::CodeBuild::Project',
-        id: arn,
-        policy: response.policy,
-      });
+    try {
+      const projects = await this.listSharedProjects();
+      for (const arn of projects) {
+        const response = await this.getResourcePolicy(arn);
+        if (!response.policy) continue;
+        result.resources.push({
+          type: 'AWS::CodeBuild::Project',
+          id: arn,
+          policy: response.policy,
+        });
+      }
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }

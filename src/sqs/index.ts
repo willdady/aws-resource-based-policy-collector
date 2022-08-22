@@ -37,15 +37,19 @@ export class SqsPolicyCollector extends BasePolicyCollector {
       serviceName: this.serviceName,
       resources: [],
     };
-    const queueUrls = await this.listQueues();
-    for (const queueUrl of queueUrls) {
-      const response = await this.getQueueAttributes(queueUrl);
-      if (!response.Attributes?.Policy) continue;
-      result.resources.push({
-        type: 'AWS::SQS::Queue',
-        id: queueUrl,
-        policy: response.Attributes.Policy,
-      });
+    try {
+      const queueUrls = await this.listQueues();
+      for (const queueUrl of queueUrls) {
+        const response = await this.getQueueAttributes(queueUrl);
+        if (!response.Attributes?.Policy) continue;
+        result.resources.push({
+          type: 'AWS::SQS::Queue',
+          id: queueUrl,
+          policy: response.Attributes.Policy,
+        });
+      }
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }

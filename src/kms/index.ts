@@ -35,15 +35,19 @@ export class KmsPolicyCollector extends BasePolicyCollector {
       serviceName: this.serviceName,
       resources: [],
     };
-    const keys = await this.listKeys();
-    for (const k of keys) {
-      const response = await this.getKeyPolicy(k.KeyId!);
-      if (!response.Policy) continue;
-      result.resources.push({
-        type: 'AWS::KMS::Key',
-        id: k.KeyId!,
-        policy: response.Policy,
-      });
+    try {
+      const keys = await this.listKeys();
+      for (const k of keys) {
+        const response = await this.getKeyPolicy(k.KeyId!);
+        if (!response.Policy) continue;
+        result.resources.push({
+          type: 'AWS::KMS::Key',
+          id: k.KeyId!,
+          policy: response.Policy,
+        });
+      }
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }

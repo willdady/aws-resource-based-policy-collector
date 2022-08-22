@@ -11,6 +11,7 @@ export interface ServiceResource {
 export interface ServicePoliciesResult {
   serviceName: string;
   resources: ServiceResource[];
+  error?: string;
 }
 
 export abstract class BasePolicyCollector {

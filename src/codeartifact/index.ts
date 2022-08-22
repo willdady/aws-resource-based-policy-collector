@@ -33,15 +33,19 @@ export class CodeArtifactPolicyCollector extends BasePolicyCollector {
       serviceName: this.serviceName,
       resources: [],
     };
-    const domains = await this.listDomains();
-    for (const d of domains) {
-      const response = await this.getDomainPermissionsPolicy(d.name!);
-      if (!response.policy?.document) continue;
-      result.resources.push({
-        type: 'AWS::CodeArtifact::Domain',
-        id: d.name!,
-        policy: response.policy.document,
-      });
+    try {
+      const domains = await this.listDomains();
+      for (const d of domains) {
+        const response = await this.getDomainPermissionsPolicy(d.name!);
+        if (!response.policy?.document) continue;
+        result.resources.push({
+          type: 'AWS::CodeArtifact::Domain',
+          id: d.name!,
+          policy: response.policy.document,
+        });
+      }
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }

@@ -38,14 +38,18 @@ export class EventBridgePolicyCollector extends BasePolicyCollector {
       serviceName: this.serviceName,
       resources: [],
     };
-    const eventBuses = await this.listEventBuses();
-    for (const b of eventBuses) {
-      if (!b.Policy) continue;
-      result.resources.push({
-        type: 'AWS::Events::EventBus',
-        id: b.Name!,
-        policy: b.Policy,
-      });
+    try {
+      const eventBuses = await this.listEventBuses();
+      for (const b of eventBuses) {
+        if (!b.Policy) continue;
+        result.resources.push({
+          type: 'AWS::Events::EventBus',
+          id: b.Name!,
+          policy: b.Policy,
+        });
+      }
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }

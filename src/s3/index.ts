@@ -42,25 +42,29 @@ export class S3PolicyCollector extends BasePolicyCollector {
       serviceName: this.serviceName,
       resources: [],
     };
-    const buckets = await this.listBuckets();
-    for (const b of buckets.Buckets || []) {
-      const bucketLocationResponse = await this.getBucketLocation(b.Name!);
-      let getBucketPolicyResponse;
-      try {
-        getBucketPolicyResponse = await this.getBucketPolicy(
-          b.Name!,
-          bucketLocationResponse.LocationConstraint || 'us-east-1',
-        );
-      } catch (err) {
-        if ((err as Error).name === 'NoSuchBucketPolicy') continue;
-        throw err;
+    try {
+      const buckets = await this.listBuckets();
+      for (const b of buckets.Buckets || []) {
+        const bucketLocationResponse = await this.getBucketLocation(b.Name!);
+        let getBucketPolicyResponse;
+        try {
+          getBucketPolicyResponse = await this.getBucketPolicy(
+            b.Name!,
+            bucketLocationResponse.LocationConstraint || 'us-east-1',
+          );
+        } catch (err) {
+          if ((err as Error).name === 'NoSuchBucketPolicy') continue;
+          throw err;
+        }
+        if (!getBucketPolicyResponse.Policy) continue;
+        result.resources.push({
+          type: 'AWS::S3::Bucket',
+          id: b.Name!,
+          policy: getBucketPolicyResponse.Policy,
+        });
       }
-      if (!getBucketPolicyResponse.Policy) continue;
-      result.resources.push({
-        type: 'AWS::S3::Bucket',
-        id: b.Name!,
-        policy: getBucketPolicyResponse.Policy,
-      });
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }

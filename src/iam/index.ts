@@ -33,15 +33,19 @@ export class IamPolicyCollector extends BasePolicyCollector {
       serviceName: this.serviceName,
       resources: [],
     };
-    const roles = await this.listRoles();
-    for (const r of roles) {
-      const response = await this.getRole(r.RoleName!);
-      if (!response.Role?.AssumeRolePolicyDocument) continue;
-      result.resources.push({
-        type: 'AWS::IAM::Role',
-        id: r.RoleName!,
-        policy: decodeURIComponent(response.Role.AssumeRolePolicyDocument),
-      });
+    try {
+      const roles = await this.listRoles();
+      for (const r of roles) {
+        const response = await this.getRole(r.RoleName!);
+        if (!response.Role?.AssumeRolePolicyDocument) continue;
+        result.resources.push({
+          type: 'AWS::IAM::Role',
+          id: r.RoleName!,
+          policy: decodeURIComponent(response.Role.AssumeRolePolicyDocument),
+        });
+      }
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }

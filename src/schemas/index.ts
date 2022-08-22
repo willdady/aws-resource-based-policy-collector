@@ -36,25 +36,29 @@ export class EventBridgeSchemasPolicyCollector extends BasePolicyCollector {
       serviceName: this.serviceName,
       resources: [],
     };
-    const registries = await this.listRegistries();
-    for (const r of registries) {
-      // NOTE: Can not read policies of AWS managed registries
-      if (r.RegistryName!.startsWith('aws.')) continue;
-      let response;
-      try {
-        response = await this.getResourcePolicy(r.RegistryName!);
-      } catch (err) {
-        if (err instanceof NotFoundException) {
-          continue;
+    try {
+      const registries = await this.listRegistries();
+      for (const r of registries) {
+        // NOTE: Can not read policies of AWS managed registries
+        if (r.RegistryName!.startsWith('aws.')) continue;
+        let response;
+        try {
+          response = await this.getResourcePolicy(r.RegistryName!);
+        } catch (err) {
+          if (err instanceof NotFoundException) {
+            continue;
+          }
+          throw err;
         }
-        throw err;
+        if (!response.Policy) continue;
+        result.resources.push({
+          type: 'AWS::EventSchemas::Registry',
+          id: r.RegistryName!,
+          policy: response.Policy as string,
+        });
       }
-      if (!response.Policy) continue;
-      result.resources.push({
-        type: 'AWS::EventSchemas::Registry',
-        id: r.RegistryName!,
-        policy: response.Policy as string,
-      });
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }

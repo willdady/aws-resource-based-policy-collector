@@ -37,15 +37,19 @@ export class SecretsManagerPolicyCollector extends BasePolicyCollector {
       serviceName: this.serviceName,
       resources: [],
     };
-    const secrets = await this.listSecrets();
-    for (const s of secrets) {
-      const response = await this.getResourcePolicy(s.Name!);
-      if (!response.ResourcePolicy) continue;
-      result.resources.push({
-        type: 'AWS::SecretsManager::Secret',
-        id: s.Name!,
-        policy: response.ResourcePolicy,
-      });
+    try {
+      const secrets = await this.listSecrets();
+      for (const s of secrets) {
+        const response = await this.getResourcePolicy(s.Name!);
+        if (!response.ResourcePolicy) continue;
+        result.resources.push({
+          type: 'AWS::SecretsManager::Secret',
+          id: s.Name!,
+          policy: response.ResourcePolicy,
+        });
+      }
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }

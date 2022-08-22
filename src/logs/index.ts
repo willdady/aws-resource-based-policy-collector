@@ -27,14 +27,18 @@ export class CloudWatchLogsPolicyCollector extends BasePolicyCollector {
       serviceName: this.serviceName,
       resources: [],
     };
-    const destinations = await this.describeDestinations();
-    for (const d of destinations) {
-      if (!d.accessPolicy) continue;
-      result.resources.push({
-        type: 'AWS::Logs::Destination',
-        id: d.destinationName!,
-        policy: d.accessPolicy,
-      });
+    try {
+      const destinations = await this.describeDestinations();
+      for (const d of destinations) {
+        if (!d.accessPolicy) continue;
+        result.resources.push({
+          type: 'AWS::Logs::Destination',
+          id: d.destinationName!,
+          policy: d.accessPolicy,
+        });
+      }
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }

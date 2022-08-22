@@ -35,15 +35,19 @@ export class EfsPolicyCollector extends BasePolicyCollector {
       serviceName: this.serviceName,
       resources: [],
     };
-    const fileSysterms = await this.describeFileSystems();
-    for (const fs of fileSysterms) {
-      const response = await this.describeFileSystemPolicy(fs.FileSystemId!);
-      if (!response.Policy) continue;
-      result.resources.push({
-        type: 'AWS::EFS::FileSystem',
-        id: fs.FileSystemId!,
-        policy: response.Policy,
-      });
+    try {
+      const fileSysterms = await this.describeFileSystems();
+      for (const fs of fileSysterms) {
+        const response = await this.describeFileSystemPolicy(fs.FileSystemId!);
+        if (!response.Policy) continue;
+        result.resources.push({
+          type: 'AWS::EFS::FileSystem',
+          id: fs.FileSystemId!,
+          policy: response.Policy,
+        });
+      }
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }

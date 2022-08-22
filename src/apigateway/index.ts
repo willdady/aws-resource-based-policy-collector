@@ -28,14 +28,18 @@ export class ApiGatewayPolicyCollector extends BasePolicyCollector {
       serviceName: this.serviceName,
       resources: [],
     };
-    const restApis = await this.getRestApis();
-    for (const r of restApis) {
-      if (!r.policy) continue;
-      result.resources.push({
-        type: 'AWS::ApiGateway::RestApi',
-        id: r.id!,
-        policy: r.policy,
-      });
+    try {
+      const restApis = await this.getRestApis();
+      for (const r of restApis) {
+        if (!r.policy) continue;
+        result.resources.push({
+          type: 'AWS::ApiGateway::RestApi',
+          id: r.id!,
+          policy: r.policy,
+        });
+      }
+    } catch (err) {
+      result.error = JSON.stringify(err);
     }
     return result;
   }
