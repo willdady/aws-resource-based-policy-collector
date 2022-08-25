@@ -1,5 +1,6 @@
 import { ApiGatewayPolicyCollector } from './apigateway';
 import { BackupPolicyCollector } from './backup';
+import { CloudformationPolicyCollector } from './cloudformation';
 import { CloudWatchLogsPolicyCollector } from './logs';
 import { CodeArtifactPolicyCollector } from './codeartifact';
 import { CodeBuildPolicyCollector } from './codebuild';
@@ -28,6 +29,7 @@ export const collect = async (config?: { region?: string }) => {
   const collectors = [
     new ApiGatewayPolicyCollector(config),
     new BackupPolicyCollector(config),
+    new CloudformationPolicyCollector(config),
     new CloudWatchLogsPolicyCollector(config),
     new CodeArtifactPolicyCollector(config),
     new CodeBuildPolicyCollector(config),
