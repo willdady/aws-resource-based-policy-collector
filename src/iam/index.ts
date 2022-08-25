@@ -3,7 +3,9 @@ import {
   IAMClient,
   IAMClientConfig,
   paginateListRoles,
+  paginateListPolicies,
   Role,
+  GetPolicyVersionCommand,
 } from '@aws-sdk/client-iam';
 import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 
@@ -28,6 +30,28 @@ export class IamPolicyCollector extends BasePolicyCollector {
     return this.client.send(new GetRoleCommand({ RoleName: roleName }));
   }
 
+  private async listPolicies() {
+    const paginator = paginateListPolicies(
+      { client: this.client },
+      { Scope: 'Local' },
+    );
+    const policies = [];
+    for await (const page of paginator) {
+      policies.push(...(page.Policies || []));
+    }
+    return policies;
+  }
+
+  private async getPolicyVersion(policyArn: string, versionId: string) {
+    const response = await this.client.send(
+      new GetPolicyVersionCommand({
+        PolicyArn: policyArn,
+        VersionId: versionId,
+      }),
+    );
+    return response.PolicyVersion?.Document;
+  }
+
   public async run(): Promise<ServicePoliciesResult> {
     const result: ServicePoliciesResult = {
       serviceName: this.serviceName,
@@ -47,6 +71,26 @@ export class IamPolicyCollector extends BasePolicyCollector {
     } catch (err) {
       result.error = JSON.stringify(err);
     }
+
+    try {
+      const policies = await this.listPolicies();
+      for (const p of policies) {
+        if (!p.Arn || !p.DefaultVersionId) continue;
+        const policyDocument = await this.getPolicyVersion(
+          p.Arn,
+          p.DefaultVersionId,
+        );
+        if (!policyDocument) continue;
+        result.resources.push({
+          type: 'AWS::IAM::Policy',
+          id: p.PolicyName!,
+          policy: policyDocument,
+        });
+      }
+    } catch (err) {
+      result.error = JSON.stringify(err);
+    }
+
     return result;
   }
 }
