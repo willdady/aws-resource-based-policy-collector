@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.1.0 (2022-08-25)
+
+
+### Features
+
+* added RamPolicyCollector ([e1da0fd](https://github.com/willdady/aws-resource-based-policy-collector/commit/e1da0fdd4022c876ab2a052916f57c93f97d6f18))
+
 ### 1.0.16 (2022-08-25)
 
 ### 1.0.15 (2022-08-25)
