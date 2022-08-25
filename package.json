@@ -45,6 +45,7 @@
     "@aws-sdk/client-lex-models-v2": "^3.58.0",
     "@aws-sdk/client-mediastore": "^3.58.0",
     "@aws-sdk/client-opensearch": "^3.58.0",
+    "@aws-sdk/client-ram": "^3.58.0",
     "@aws-sdk/client-s3": "^3.58.0",
     "@aws-sdk/client-schemas": "^3.58.0",
     "@aws-sdk/client-secrets-manager": "^3.58.0",

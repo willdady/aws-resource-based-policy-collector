@@ -15,6 +15,7 @@ import { KmsPolicyCollector } from './kms';
 import { LambdaPolicyCollector } from './lambda';
 import { MediaStorePolicyCollector } from './mediastore';
 import { OpenSearchClientPolicyCollector } from './opensearch';
+import { RamPolicyCollector } from './ram';
 import { S3PolicyCollector } from './s3';
 import { SecretsManagerPolicyCollector } from './secretsmanager';
 import { ServerlessApplicationRepositoryPolicyCollector } from './serverless';
@@ -42,6 +43,7 @@ export const collect = async (config?: { region?: string }) => {
     new LambdaPolicyCollector(config),
     new MediaStorePolicyCollector(config),
     new OpenSearchClientPolicyCollector(config),
+    new RamPolicyCollector(config),
     new S3PolicyCollector(config),
     new SecretsManagerPolicyCollector(config),
     new ServerlessApplicationRepositoryPolicyCollector(config),
