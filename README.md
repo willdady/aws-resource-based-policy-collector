@@ -92,7 +92,7 @@ This list of services is taken from the tables found at [AWS services that work 
 - [x]  VPC (endpoints)
 - [x]  Elemental MediaStore
 - [x]  OpenSearch
-- [ ]  Glue
+- [x]  Glue
 - [x]  EventBridge
 - [x]  EventBridge Schemas
 - [x]  SNS

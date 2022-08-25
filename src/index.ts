@@ -9,6 +9,7 @@ import { EfsPolicyCollector } from './efs';
 import { EventBridgePolicyCollector } from './events';
 import { EventBridgeSchemasPolicyCollector } from './schemas';
 import { GlacierPolicyCollector } from './glacier';
+import { GluePolicyCollector } from './glue';
 import { IamPolicyCollector } from './iam';
 import { KmsPolicyCollector } from './kms';
 import { LambdaPolicyCollector } from './lambda';
@@ -35,6 +36,7 @@ export const collect = async (config?: { region?: string }) => {
     new EventBridgePolicyCollector(config),
     new EventBridgeSchemasPolicyCollector(config),
     new GlacierPolicyCollector(config),
+    new GluePolicyCollector(config),
     new IamPolicyCollector(config),
     new KmsPolicyCollector(config),
     new LambdaPolicyCollector(config),
