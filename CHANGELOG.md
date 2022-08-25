@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.2.0 (2022-08-25)
+
+
+### Features
+
+* added CloudformationPolicyCollector ([6e0c016](https://github.com/willdady/aws-resource-based-policy-collector/commit/6e0c0161b3d5510379519b2323777421421bd664))
+
 ## 1.1.0 (2022-08-25)
 
 
