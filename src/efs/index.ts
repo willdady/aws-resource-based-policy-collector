@@ -4,6 +4,7 @@ import {
   EFSClientConfig,
   FileSystemDescription,
   paginateDescribeFileSystems,
+  PolicyNotFound
 } from '@aws-sdk/client-efs';
 import { BasePolicyCollector, ServicePoliciesResult } from '../core';
 
@@ -38,13 +39,20 @@ export class EfsPolicyCollector extends BasePolicyCollector {
     try {
       const fileSysterms = await this.describeFileSystems();
       for (const fs of fileSysterms) {
-        const response = await this.describeFileSystemPolicy(fs.FileSystemId!);
-        if (!response.Policy) continue;
-        result.resources.push({
-          type: 'AWS::EFS::FileSystem',
-          id: fs.FileSystemId!,
-          policy: response.Policy,
-        });
+        try {          
+          const response = await this.describeFileSystemPolicy(fs.FileSystemId!);
+          if (!response.Policy) continue;
+          result.resources.push({
+            type: 'AWS::EFS::FileSystem',
+            id: fs.FileSystemId!,
+            policy: response.Policy,
+          });
+        } catch (err) {
+          if (err instanceof PolicyNotFound) {
+            continue;
+          }
+          throw err;
+        }
       }
     } catch (err) {
       result.error = JSON.stringify(err);

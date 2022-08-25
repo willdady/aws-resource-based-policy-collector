@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.0.14 (2022-08-23)
+
+
+### Bug Fixes
+
+* handle PolicyNotFound in EFS service ([be682f4](https://github.com/willdady/aws-resource-based-policy-collector/commit/be682f486273d32e8c17444446febef31d5a9ec3))
+
+### 1.0.13 (2022-08-22)
+
 ### 1.0.12 (2022-08-17)
 
 ### 1.0.11 (2022-07-15)
