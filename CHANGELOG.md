@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.3.0 (2022-08-26)
+
+
+### Features
+
+* added AcmPcaPolicyCollector ([bffa79e](https://github.com/willdady/aws-resource-based-policy-collector/commit/bffa79ea6dc78ad30c8de994e4f35d88a44c8331))
+
 ### 1.2.1 (2022-08-26)
 
 ## 1.2.0 (2022-08-25)
