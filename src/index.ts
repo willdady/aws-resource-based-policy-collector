@@ -12,6 +12,7 @@ import { EventBridgeSchemasPolicyCollector } from './schemas';
 import { GlacierPolicyCollector } from './glacier';
 import { GluePolicyCollector } from './glue';
 import { IamPolicyCollector } from './iam';
+import { IotPolicyCollector } from './iot';
 import { KmsPolicyCollector } from './kms';
 import { LambdaPolicyCollector } from './lambda';
 import { MediaStorePolicyCollector } from './mediastore';
@@ -41,6 +42,7 @@ export const collect = async (config?: { region?: string }) => {
     new GlacierPolicyCollector(config),
     new GluePolicyCollector(config),
     new IamPolicyCollector(config),
+    new IotPolicyCollector(config),
     new KmsPolicyCollector(config),
     new LambdaPolicyCollector(config),
     new MediaStorePolicyCollector(config),
