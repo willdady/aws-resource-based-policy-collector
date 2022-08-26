@@ -1,3 +1,4 @@
+import { AcmPcaPolicyCollector } from './acm-pca';
 import { ApiGatewayPolicyCollector } from './apigateway';
 import { BackupPolicyCollector } from './backup';
 import { CloudformationPolicyCollector } from './cloudformation';
@@ -28,6 +29,7 @@ export { ServicePoliciesResult, ServiceResource } from './core';
 
 export const collect = async (config?: { region?: string }) => {
   const collectors = [
+    new AcmPcaPolicyCollector(config),
     new ApiGatewayPolicyCollector(config),
     new BackupPolicyCollector(config),
     new CloudformationPolicyCollector(config),

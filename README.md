@@ -82,7 +82,7 @@ This list of services is taken from the tables found at [AWS services that work 
 - [x]  CodeBuild
 - [x]  IAM
 - [x]  SecretsManager
-- [ ]  ACM Private Certificate Authority
+- [x]  ACM Private Certificate Authority
 - [x]  KMS
 - [ ]  Lex v2
 - [x]  CloudWatch Logs
