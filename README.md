@@ -97,7 +97,7 @@ This list of services is taken from the tables found at [AWS services that work 
 - [x]  EventBridge Schemas
 - [x]  SNS
 - [x]  SQS
-- [ ]  IoT
+- [x]  IoT
 - [ ]  SES v2
 
 [services]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_aws-services-that-work-with-iam.html
