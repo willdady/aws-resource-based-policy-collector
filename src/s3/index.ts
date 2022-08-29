@@ -43,13 +43,18 @@ export class S3PolicyCollector extends BasePolicyCollector {
       resources: [],
     };
     try {
+      this.log('Listing buckets');
       const buckets = await this.listBuckets();
+      this.log(`- got ${(buckets.Buckets || []).length} buckets`);
       for (const b of buckets.Buckets || []) {
-        const bucketLocationResponse = await this.getBucketLocation(b.Name!);
+        if (!b.Name) continue;
+        this.log(`Getting bucket location for bucket '${b.Name}'`);
+        const bucketLocationResponse = await this.getBucketLocation(b.Name);
         let getBucketPolicyResponse;
         try {
+          this.log(`Getting bucket location for bucket '${b.Name}'`);
           getBucketPolicyResponse = await this.getBucketPolicy(
-            b.Name!,
+            b.Name,
             bucketLocationResponse.LocationConstraint || 'us-east-1',
           );
         } catch (err) {
@@ -59,7 +64,7 @@ export class S3PolicyCollector extends BasePolicyCollector {
         if (!getBucketPolicyResponse.Policy) continue;
         result.resources.push({
           type: 'AWS::S3::Bucket',
-          id: b.Name!,
+          id: b.Name,
           policy: getBucketPolicyResponse.Policy,
         });
       }

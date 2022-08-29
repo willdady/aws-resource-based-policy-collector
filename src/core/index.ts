@@ -21,5 +21,9 @@ export abstract class BasePolicyCollector {
     this.serviceName = serviceName;
   }
 
+  protected log(message?: any) {
+    console.log(this.serviceName, ': ', message);
+  }
+
   public abstract run(): Promise<ServicePoliciesResult>;
 }
