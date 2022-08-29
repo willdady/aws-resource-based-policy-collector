@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.3.1 (2022-08-29)
+
+
+### Bug Fixes
+
+* ignore deleted stacks ([e17c022](https://github.com/willdady/aws-resource-based-policy-collector/commit/e17c022c9dc7da2fba2fc0c9e150220abd1cffc9))
+
 ## 1.3.0 (2022-08-26)
 
 
