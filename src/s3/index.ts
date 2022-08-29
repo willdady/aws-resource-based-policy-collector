@@ -52,7 +52,7 @@ export class S3PolicyCollector extends BasePolicyCollector {
         const bucketLocationResponse = await this.getBucketLocation(b.Name);
         let getBucketPolicyResponse;
         try {
-          this.log(`Getting bucket location for bucket '${b.Name}'`);
+          this.log(`Getting bucket policy for bucket '${b.Name}'`);
           getBucketPolicyResponse = await this.getBucketPolicy(
             b.Name,
             bucketLocationResponse.LocationConstraint || 'us-east-1',
@@ -69,7 +69,9 @@ export class S3PolicyCollector extends BasePolicyCollector {
         });
       }
     } catch (err) {
-      result.error = JSON.stringify(err);
+      const errStringified = JSON.stringify(err);
+      this.log(errStringified);
+      result.error = errStringified;
     }
     return result;
   }
