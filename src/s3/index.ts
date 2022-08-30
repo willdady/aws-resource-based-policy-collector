@@ -48,10 +48,10 @@ export class S3PolicyCollector extends BasePolicyCollector {
       this.log(`- got ${(buckets.Buckets || []).length} buckets`);
       for (const b of buckets.Buckets || []) {
         if (!b.Name) continue;
-        this.log(`Getting bucket location for bucket '${b.Name}'`);
-        const bucketLocationResponse = await this.getBucketLocation(b.Name);
         let getBucketPolicyResponse;
         try {
+          this.log(`Getting bucket location for bucket '${b.Name}'`);
+          const bucketLocationResponse = await this.getBucketLocation(b.Name);
           this.log(`Getting bucket policy for bucket '${b.Name}'`);
           getBucketPolicyResponse = await this.getBucketPolicy(
             b.Name,
@@ -59,7 +59,15 @@ export class S3PolicyCollector extends BasePolicyCollector {
           );
         } catch (err) {
           if ((err as Error).name === 'NoSuchBucketPolicy') continue;
-          throw err;
+          const errStringified = JSON.stringify(err);
+          this.log(errStringified);
+          result.resources.push({
+            type: 'AWS::S3::Bucket',
+            id: b.Name,
+            policy: '',
+            error: errStringified,
+          });
+          continue;
         }
         if (!getBucketPolicyResponse.Policy) continue;
         result.resources.push({

@@ -84,7 +84,13 @@ export class LambdaPolicyCollector extends BasePolicyCollector {
             if (err instanceof ResourceNotFoundException) {
               continue;
             }
-            throw err;
+            result.resources.push({
+              type: 'AWS::Lambda::Alias',
+              id: [f.FunctionArn, ':', a.Name].join(''),
+              policy: '',
+              error: JSON.stringify(err),
+            });
+            continue;
           }
         }
 
@@ -105,7 +111,13 @@ export class LambdaPolicyCollector extends BasePolicyCollector {
             if (err instanceof ResourceNotFoundException) {
               continue;
             }
-            throw err;
+            result.resources.push({
+              type: 'AWS::Lambda::Version',
+              id: [f.FunctionArn, ':', v.Version].join(''),
+              policy: '',
+              error: JSON.stringify(err),
+            });
+            continue;
           }
         }
 
@@ -121,7 +133,12 @@ export class LambdaPolicyCollector extends BasePolicyCollector {
           if (err instanceof ResourceNotFoundException) {
             continue;
           }
-          throw err;
+          result.resources.push({
+            type: 'AWS::Lambda::Function',
+            id: f.FunctionName!,
+            policy: '',
+            error: JSON.stringify(err),
+          });
         }
       }
     } catch (err) {

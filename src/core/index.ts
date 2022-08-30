@@ -6,6 +6,7 @@ export interface ServiceResource {
   id: string;
   type: string;
   policy: string;
+  error?: string;
 }
 
 export interface ServicePoliciesResult {
