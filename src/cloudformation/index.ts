@@ -38,10 +38,13 @@ export class CloudformationPolicyCollector extends BasePolicyCollector {
       resources: [],
     };
     try {
+      this.log('Listing stacks');
       const stacks = await this.listStacks();
+      this.log(`- Got ${stacks.length} stacks`);
       for (const s of stacks) {
         // Ignore deleted stacks
         if (s.DeletionTime) continue;
+        await this.sleep(500);
         const stackPolicy = await this.getStackPolicy(s.StackName!);
         if (!stackPolicy) continue;
         result.resources.push({

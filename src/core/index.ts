@@ -25,5 +25,9 @@ export abstract class BasePolicyCollector {
     console.log(this.serviceName, ': ', message);
   }
 
+  protected sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   public abstract run(): Promise<ServicePoliciesResult>;
 }
