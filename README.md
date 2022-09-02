@@ -2,7 +2,7 @@
 
 This library aims to collect resource-based policies from an AWS account.
 
-**NOTE**: This library does not cover all AWS services which support resource-based policies and has *not* been rigurously tested! Refer to [supported services](#supported-services) below.
+It does not currently call all AWS services which support resource-based policies. Refer to [supported services](#supported-services) below.
 
 ## Install
 
@@ -16,7 +16,7 @@ npm install aws-resource-based-policy-collector
 
 ## Usage
 
-Your environment must be configured with valid AWS credentials. See [Setting credentials in Node.js][credentials]. Your credentials must be authorised to perform read-only actions within your account.
+Your environment must be configured with valid AWS credentials. See [Setting credentials in Node.js][credentials]. Your credentials must be authorised to perform read-only actions within your account. This can be achieved simply by creating a role in your account with the AWS managed `ReadOnlyAccess` policy. Naturally, your account must also not have read actions restricted by any service control policies in your organisation hierarchy.
 
 ```typescript
 
@@ -30,9 +30,15 @@ const main = async () => {
 main();
 ```
 
-The `collect` function returns an array of objects per-service where each service object contains an array of `resource` objects. Each resource object contains a `type` and `id` to uniquly identify the resource.
+The AWS region defaults to that of your credentials however you may optionally set this explicitly.
 
-Each resource contains a JSON encoded `policy`. Only resources with policies are included.
+```typescript
+const result = await collect({ region: 'us-east-1' });
+```
+
+The `collect` function returns an array of objects per-service where each service object contains an array of `resource` objects. The service object may also contain an optional `error` field if there was an issue listing resources. This typically ocurrs if your credentials do not have the required permissions to read the resources (or is blocked by an SCP).
+
+Each resource object contains a `type` and `id` to uniquly identify the resource as well as a JSON encoded `policy`. The resource may also contain an optional `error` field if there was an issue querying the resource or it's policy.
 
 ```typescript
 [
@@ -42,26 +48,17 @@ Each resource contains a JSON encoded `policy`. Only resources with policies are
       {
         type: 'AWS::S3::Bucket',
         id: 'my-bucket',
-        policy: '', // JSON encoded string
+        policy: '', // Policy document
+        error: '', // Only present if an error ocurred
       }
-    ]
+    ],
+    error: '', // Only present if an error ocurred
   },
   ...
 ]
 ```
 
-If an error is encounted when processing a service the error object is emitted into the optional `error` field.
-
-```typescript
-[
-  {
-    serviceName: 's3',
-    resources: [],
-    error: '' // JSON encoded string
-  },
-  ...
-]
-```
+Only resources with policies or errors are included.
 
 ## Supported services
 
@@ -99,6 +96,12 @@ This list of services is taken from the tables found at [AWS services that work 
 - [x]  SQS
 - [x]  IoT
 - [ ]  SES v2
+
+## Troubleshooting
+
+### Access denied on S3 buckets
+
+If you are getting `AccessDenied` errors on S3 bucket resources your bucket likely has a bucket policy preventing access. Remove the bucket policy or modify it to grant read access to your role.
 
 [services]: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_aws-services-that-work-with-iam.html
 [credentials]: https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/setting-credentials-node.html
