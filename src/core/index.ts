@@ -6,6 +6,7 @@ export interface ServiceResource {
   id: string;
   type: string;
   policy: string;
+  error?: string;
 }
 
 export interface ServicePoliciesResult {
@@ -23,6 +24,10 @@ export abstract class BasePolicyCollector {
 
   protected log(message?: any) {
     console.log(this.serviceName, ': ', message);
+  }
+
+  protected sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   public abstract run(): Promise<ServicePoliciesResult>;

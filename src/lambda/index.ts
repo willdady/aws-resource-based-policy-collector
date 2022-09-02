@@ -65,10 +65,13 @@ export class LambdaPolicyCollector extends BasePolicyCollector {
       resources: [],
     };
     try {
+      this.log('Listing functions');
       const functions = await this.listFunctions();
+      this.log(`- got ${functions.length} functions`);
       for (const f of functions) {
         const aliases = await this.listAliases(f.FunctionName!);
         for (const a of aliases) {
+          await this.sleep(500);
           try {
             const response = await this.getPolicy(f.FunctionName!, a.Name!);
             if (!response.Policy) continue;
@@ -81,12 +84,21 @@ export class LambdaPolicyCollector extends BasePolicyCollector {
             if (err instanceof ResourceNotFoundException) {
               continue;
             }
-            throw err;
+            result.resources.push({
+              type: 'AWS::Lambda::Alias',
+              id: [f.FunctionArn, ':', a.Name].join(''),
+              policy: '',
+              error: JSON.stringify(err),
+            });
+            continue;
           }
         }
 
+        this.log('Listing versions');
         const versions = await this.listVersions(f.FunctionName!);
+        this.log(`- got ${versions.length} versions`);
         for (const v of versions) {
+          await this.sleep(500);
           try {
             const response = await this.getPolicy(f.FunctionName!, v.Version!);
             if (!response.Policy) continue;
@@ -99,7 +111,13 @@ export class LambdaPolicyCollector extends BasePolicyCollector {
             if (err instanceof ResourceNotFoundException) {
               continue;
             }
-            throw err;
+            result.resources.push({
+              type: 'AWS::Lambda::Version',
+              id: [f.FunctionArn, ':', v.Version].join(''),
+              policy: '',
+              error: JSON.stringify(err),
+            });
+            continue;
           }
         }
 
@@ -115,7 +133,12 @@ export class LambdaPolicyCollector extends BasePolicyCollector {
           if (err instanceof ResourceNotFoundException) {
             continue;
           }
-          throw err;
+          result.resources.push({
+            type: 'AWS::Lambda::Function',
+            id: f.FunctionName!,
+            policy: '',
+            error: JSON.stringify(err),
+          });
         }
       }
     } catch (err) {
