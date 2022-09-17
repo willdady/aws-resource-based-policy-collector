@@ -2,8 +2,6 @@
 
 This library aims to collect resource-based policies from an AWS account.
 
-It does not currently call all AWS services which support resource-based policies. Refer to [supported services](#supported-services) below.
-
 ## Install
 
 ```bash
@@ -13,6 +11,12 @@ or
 ```bash
 npm install aws-resource-based-policy-collector
 ```
+
+## Motivation
+
+When removing an account from an AWS organisation special attention must be paid to resource-based policies. Specifically, the presence of the [aws:PrincipalOrgID](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html#condition-keys-principalorgid) condition key will cause access issues once the account leaves it's parent organisation.
+
+This library simply collects resources and their associated policies in an unopinionated manner. The actual analysis of the output is left to the consumers of this library.
 
 ## Usage
 
@@ -96,6 +100,14 @@ This list of services is taken from the tables found at [AWS services that work 
 - [x]  SQS
 - [x]  IoT
 - [ ]  SES v2
+
+## Other services
+
+### AWS RAM
+
+AWS RAM does not support resource-based policies however it is included as it is likely of interest as resources may be shared with the parent organisation.
+
+Note the `policy` field for this resource type is NOT a JSON policy rather it is an `arn` of the principal the resource is shared with.
 
 ## Troubleshooting
 
